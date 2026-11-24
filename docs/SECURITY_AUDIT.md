@@ -42,7 +42,7 @@ Authentication, two-factor authentication, sessions, CSRF, and XSS do not apply.
 - PHPStan at level 5 with no errors.
 - `composer audit` reported no advisories for the locked dependency.
 - `gitleaks` with redaction reported no findings.
-- GitHub Actions passed on PHP 8.4 and 8.5 for the initial implementation commit `4d7bf93`. Later commits have not run in CI.
+- GitHub Actions passed on PHP 8.4 and 8.5 for the commit released as 1.0.0.
 
 ## Known limitations
 

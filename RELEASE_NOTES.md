@@ -1,10 +1,10 @@
-# Release Notes: 1.0.0
+# Release Notes: 1.0.1
 
-Status: prepared, not yet tagged or released.
+Released on 2026-11-24.
 
-This is the first functional release. The repository was created in 2015 with a description and a license, and the implementation was added in 2026.
+This is a documentation-only patch release. It corrects the release notes and security audit so that they describe the published 1.0.0 release accurately. There is no change in code behaviour.
 
-## Highlights
+## Highlights of the 1.x line
 
 - Stable, weighted assignment with no assignment storage.
 - Conversion analysis with Wilson intervals, a two-proportion z-test, and Holm correction.
@@ -18,8 +18,8 @@ This is the first functional release. The repository was created in 2015 with a 
 
 ## Verification
 
-See `reports/tests/summary.md` for the recorded test run on PHP 8.5. GitHub Actions passed on PHP 8.4 and 8.5 for the initial implementation commit `4d7bf93`. Later commits have not run in CI.
+See `reports/tests/summary.md` for the recorded test run. GitHub Actions passed on PHP 8.4 and 8.5 for the commit released as 1.0.0.
 
 ## Upgrade notes
 
-There is no earlier functional version, so no migration is needed.
+No migration is needed from 1.0.0.

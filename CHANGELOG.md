@@ -2,7 +2,13 @@
 
 All notable changes to this project are documented here. The format follows Keep a Changelog, and the project uses Semantic Versioning.
 
-## [1.0.0] - Unreleased
+## [1.0.1] - 2026-11-24
+
+### Changed
+
+- Corrected the release notes and security audit to reflect the published 1.0.0 release and the CI run on the released commit. Documentation only, no change in code behaviour.
+
+## [1.0.0] - 2026-11-24
 
 ### Added
 

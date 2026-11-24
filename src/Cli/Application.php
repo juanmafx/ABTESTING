@@ -13,7 +13,7 @@ use AbTesting\Domain\Variant;
 
 final class Application
 {
-    public const string VERSION = '1.0.0';
+    public const string VERSION = '1.0.1';
 
     public const int EXIT_OK = 0;
     public const int EXIT_INVALID = 2;
