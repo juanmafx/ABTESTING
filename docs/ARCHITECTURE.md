@@ -31,11 +31,11 @@ ABTESTING is a layered PHP library with a thin CLI. Dependencies point inward: t
 
 ### Stateless deterministic assignment
 
-The bucket is derived from the first 32 bits of `SHA-256(len(key):key:len(unit):unit)`, scaled to the range 0 to 9,999. The length prefixes stop different key and unit pairs from producing the same message. Including the experiment key makes assignments independent across experiments. Weight comparisons use integer arithmetic to avoid floating-point boundary errors.
+The bucket is derived from the first 32 bits of `SHA-256(len(key):key:len(unit):unit)`, scaled to the range 0 to 9,999. The length prefixes stop different key and unit pairs from producing the same message. Including the experiment key decorrelates assignments across experiments. Weight comparisons use integer arithmetic to avoid floating-point boundary errors. Assignment rejects any variant holding less than 1/10,000 of the total weight, because such a variant might own no bucket and silently receive no traffic.
 
 ### Statistics without dependencies
 
-Normal tail probabilities use Hart's rational approximation as published by West, with a continued fraction for the far tail. Quantiles use Acklam's approximation with one Halley refinement step. Chi-square tails use the exact recurrence for integer and half-integer shapes of the incomplete gamma function. Tests check these against independently computed values.
+Normal tail probabilities use Hart's rational approximation as published by West, with a continued fraction for the far tail. Quantiles use Acklam's approximation with one Halley refinement step, evaluated on the lower tail and mirrored for upper probabilities to avoid cancellation. Chi-square tails use the recurrence for integer and half-integer shapes of the incomplete gamma function. Tests check these against fixed reference values.
 
 ### Analysis defaults
 
@@ -46,7 +46,7 @@ Normal tail probabilities use Hart's rational approximation as published by West
 
 ### No framework or runtime dependency
 
-Runtime supply-chain exposure is zero. The only development dependency is PHPStan, pinned exactly and locked.
+The package has no third-party runtime dependencies. The only development dependency is PHPStan, pinned exactly and locked.
 
 ## Recommended production integration
 

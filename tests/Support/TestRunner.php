@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbTesting\Tests\Support;
 
+use ErrorException;
 use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
@@ -65,6 +66,9 @@ final class TestRunner
             $start = hrtime(true);
             $status = 'passed';
             $message = '';
+            set_error_handler(static function (int $severity, string $text, string $file, int $line): never {
+                throw new ErrorException($text, 0, $severity, $file, $line);
+            });
             try {
                 $method->invoke($instance);
                 if ($instance->assertions === 0) {
@@ -77,6 +81,8 @@ final class TestRunner
             } catch (Throwable $failure) {
                 $status = 'failed';
                 $message = $failure::class . ': ' . $failure->getMessage();
+            } finally {
+                restore_error_handler();
             }
             $this->results[] = [
                 'class' => $reflection->getShortName(),

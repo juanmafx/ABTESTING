@@ -19,6 +19,16 @@ All notable changes to this project are documented here. The format follows Keep
 
 - Rewrote the README in English.
 
+### Fixed
+
+- Reject out-of-range sample sizes instead of crashing or printing a meaningless number.
+- Reject a power too low for the chosen alpha.
+- Reject variants too small to receive traffic.
+- Enforce the CSV size limit on the bytes actually read.
+- Validate expected weights and compare variant names as strings.
+- Improve quantile accuracy for upper-tail probabilities.
+- Treat PHP warnings as test failures.
+
 ## Repository created - 2015-05-16
 
 ### Added

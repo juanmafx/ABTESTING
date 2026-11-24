@@ -19,18 +19,28 @@ final class ObservationCsvReader
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidInput('Input must be a readable regular file.');
         }
-        $size = filesize($path);
-        if ($size === false || $size > self::MAX_BYTES) {
-            throw new InvalidInput(sprintf('Input must not exceed %d bytes.', self::MAX_BYTES));
-        }
         $handle = fopen($path, 'rb');
         if ($handle === false) {
             throw new InvalidInput('Input could not be opened.');
         }
         try {
-            return $this->parse($handle);
+            $content = stream_get_contents($handle, self::MAX_BYTES + 1);
         } finally {
             fclose($handle);
+        }
+        if ($content === false || strlen($content) > self::MAX_BYTES) {
+            throw new InvalidInput(sprintf('Input must not exceed %d bytes.', self::MAX_BYTES));
+        }
+        $buffer = fopen('php://memory', 'w+b');
+        if ($buffer === false) {
+            throw new InvalidInput('Input could not be buffered.');
+        }
+        try {
+            fwrite($buffer, $content);
+            rewind($buffer);
+            return $this->parse($buffer);
+        } finally {
+            fclose($buffer);
         }
     }
 

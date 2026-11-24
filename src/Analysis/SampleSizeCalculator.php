@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AbTesting\Analysis;
 
 use AbTesting\Domain\InvalidInput;
+use AbTesting\Domain\Observation;
 use AbTesting\Statistics\NormalDistribution;
 
 final class SampleSizeCalculator
@@ -23,6 +24,15 @@ final class SampleSizeCalculator
         $average = ($baseline + $target) / 2.0;
         $null = $zAlpha * sqrt(2.0 * $average * (1.0 - $average));
         $alternative = $zPower * sqrt($baseline * (1.0 - $baseline) + $target * (1.0 - $target));
-        return (int) ceil((($null + $alternative) ** 2) / ($minimumDetectableEffect ** 2));
+        $numerator = $null + $alternative;
+        if ($numerator <= 0.0) {
+            throw new InvalidInput('Power is too low for the chosen alpha.');
+        }
+        $effectSquared = $minimumDetectableEffect ** 2;
+        $required = $effectSquared > 0.0 ? $numerator ** 2 / $effectSquared : INF;
+        if (!is_finite($required) || $required > Observation::MAX_COUNT) {
+            throw new InvalidInput('Required sample size exceeds the supported range.');
+        }
+        return (int) ceil($required);
     }
 }

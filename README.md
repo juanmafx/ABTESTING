@@ -39,7 +39,7 @@ There is no client or server application, so the repository has no `frontend/` o
 
 ## Quick start
 
-Requirements: PHP 8.4 or newer. The tool has no runtime dependencies.
+Requirements: 64-bit PHP 8.4 or newer. The tool has no third-party runtime dependencies.
 
 ```bash
 git clone https://github.com/juanmafx/ABTESTING.git
@@ -132,6 +132,8 @@ The tool uses command-line options only. It reads no environment variables or co
 
 Exit codes: `0` for success and `2` for invalid usage or input.
 
+Limits: `assign` requires every variant to hold at least 1/10,000 of the total weight, so that each one can receive traffic. `sample-size` rejects a power too low for the chosen alpha, and any result above 999,999,999,999,999 units.
+
 ## Database schema (optional)
 
 The library and CLI do not use a database. [db/schema.sql](db/schema.sql) is an optional starting point for teams that want to persist experiments, assignments, conversions, and analysis runs. Its automated tests run against SQLite. It is written to be portable to PostgreSQL, but has not been run on PostgreSQL.
@@ -145,7 +147,7 @@ php tests/run.php
 php tests/run.php --report-dir reports/tests
 ```
 
-The suite uses a small in-repository harness so it runs on a bare PHP install without the XML extensions PHPUnit requires. Statistical tests compare results with reference values computed independently using Python's standard library. Schema tests are skipped if the `sqlite3` command is unavailable.
+The suite uses a small in-repository harness so it runs on a bare PHP install without the XML extensions PHPUnit requires. Statistical tests compare results with fixed reference values. PHP warnings raised during a test count as failures. Schema tests are skipped if the `sqlite3` command is unavailable.
 
 Static analysis requires the pinned development dependency:
 

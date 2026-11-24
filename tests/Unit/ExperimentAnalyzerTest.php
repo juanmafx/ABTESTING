@@ -79,6 +79,22 @@ final class ExperimentAnalyzerTest extends TestCase
         $this->assertFalse($report->sampleRatio->mismatch);
     }
 
+    public function testRejectsInvalidExpectedWeights(): void
+    {
+        $analyzer = new ExperimentAnalyzer();
+        $pair = [new Observation('control', 10, 1), new Observation('treatment', 10, 2)];
+        foreach ([0, -1, 1_000_001, 1.5, '1'] as $weight) {
+            $this->assertThrows(InvalidInput::class, static fn () => $analyzer->analyze($pair, 'control', 0.05, ['control' => $weight, 'treatment' => 1]));
+        }
+    }
+
+    public function testExpectedWeightsMatchNumericLookingNames(): void
+    {
+        $report = (new ExperimentAnalyzer())->analyze([new Observation('01', 100, 10), new Observation('1', 100, 12)], '1', 0.05, ['1' => 50, '01' => 50]);
+        $this->assertFalse($report->sampleRatio->mismatch);
+        $this->assertSame('01', $report->comparisons[0]->variant);
+    }
+
     public function testRejectsInvalidInput(): void
     {
         $analyzer = new ExperimentAnalyzer();

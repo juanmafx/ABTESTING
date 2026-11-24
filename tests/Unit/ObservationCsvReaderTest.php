@@ -67,10 +67,64 @@ final class ObservationCsvReaderTest extends TestCase
         });
     }
 
+    public function testEnforcesLimitWhenReportedSizeUnderstatesContent(): void
+    {
+        stream_wrapper_register('abtestunderreported', UnderreportedSizeStream::class);
+        try {
+            $this->assertThrows(InvalidInput::class, static fn () => (new ObservationCsvReader())->read('abtestunderreported://input.csv'));
+        } finally {
+            stream_wrapper_unregister('abtestunderreported');
+        }
+    }
+
     public function testRejectsDirectoriesAndMissingFiles(): void
     {
         $reader = new ObservationCsvReader();
         $this->assertThrows(InvalidInput::class, static fn () => $reader->read(sys_get_temp_dir()));
         $this->assertThrows(InvalidInput::class, static fn () => $reader->read(sys_get_temp_dir() . '/abtest-missing-file.csv'));
+    }
+}
+
+final class UnderreportedSizeStream
+{
+    public mixed $context = null;
+
+    private int $offset = 0;
+
+    private static function content(): string
+    {
+        return "variant,exposures,conversions\n" . str_repeat("\n", ObservationCsvReader::MAX_BYTES);
+    }
+
+    private static function stats(): array
+    {
+        return ['mode' => 0o100444, 'size' => 32, 'uid' => getmyuid(), 'gid' => getmygid()];
+    }
+
+    public function stream_open(string $path, string $mode, int $options, ?string &$openedPath): bool
+    {
+        return true;
+    }
+
+    public function stream_read(int $count): string
+    {
+        $chunk = substr(self::content(), $this->offset, $count);
+        $this->offset += strlen($chunk);
+        return $chunk;
+    }
+
+    public function stream_eof(): bool
+    {
+        return $this->offset >= strlen(self::content());
+    }
+
+    public function stream_stat(): array
+    {
+        return self::stats();
+    }
+
+    public function url_stat(string $path, int $flags): array
+    {
+        return self::stats();
     }
 }

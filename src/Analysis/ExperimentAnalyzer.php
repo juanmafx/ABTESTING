@@ -7,6 +7,7 @@ namespace AbTesting\Analysis;
 use AbTesting\Domain\Experiment;
 use AbTesting\Domain\InvalidInput;
 use AbTesting\Domain\Observation;
+use AbTesting\Domain\Variant;
 use AbTesting\Statistics\ChiSquareDistribution;
 use AbTesting\Statistics\NormalDistribution;
 
@@ -76,10 +77,15 @@ final class ExperimentAnalyzer
         }
         $observed = array_map('strval', array_keys($byVariant));
         $expected = array_map('strval', array_keys($expectedWeights));
-        sort($observed);
-        sort($expected);
+        sort($observed, SORT_STRING);
+        sort($expected, SORT_STRING);
         if ($observed !== $expected) {
             throw new InvalidInput('Expected weights must name exactly the observed variants.');
+        }
+        foreach ($expectedWeights as $weight) {
+            if (!is_int($weight) || $weight < 1 || $weight > Variant::MAX_WEIGHT) {
+                throw new InvalidInput(sprintf('Expected weights must be integers between 1 and %d.', Variant::MAX_WEIGHT));
+            }
         }
         return $expectedWeights;
     }

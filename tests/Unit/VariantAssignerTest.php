@@ -75,6 +75,24 @@ final class VariantAssignerTest extends TestCase
         }
     }
 
+    public function testRejectsVariantTooSmallToReceiveTraffic(): void
+    {
+        $experiment = new Experiment('tiny', [new Variant('control', 1_000_000), new Variant('treatment', 1)]);
+        $assigner = new VariantAssigner();
+        $this->assertThrows(InvalidInput::class, static fn () => $assigner->assign($experiment, 'unit'));
+    }
+
+    public function testSmallestSupportedShareReceivesTraffic(): void
+    {
+        $experiment = new Experiment('smallest', [new Variant('small', 1), new Variant('large', 9_999)]);
+        $assigner = new VariantAssigner();
+        $found = false;
+        for ($i = 0; $i < 200_000 && !$found; $i++) {
+            $found = $assigner->assign($experiment, "unit-$i")->variant === 'small';
+        }
+        $this->assertTrue($found, 'smallest variant is reachable');
+    }
+
     public function testRejectsInvalidUnitIdentifiers(): void
     {
         $assigner = new VariantAssigner();

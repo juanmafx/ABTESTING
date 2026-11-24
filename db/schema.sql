@@ -1,5 +1,5 @@
 -- Optional persistence schema for experiments, assignments, conversions, and analysis runs.
--- Portable across SQLite 3.35+ and PostgreSQL 13+. In SQLite, run PRAGMA foreign_keys = ON per connection.
+-- Tested on SQLite only; written to be portable to PostgreSQL. In SQLite, run PRAGMA foreign_keys = ON per connection.
 
 CREATE TABLE IF NOT EXISTS experiments (
     experiment_key VARCHAR(64) PRIMARY KEY,

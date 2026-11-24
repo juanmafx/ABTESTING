@@ -17,6 +17,11 @@ final class VariantAssigner
 
     public function assign(Experiment $experiment, string $unitId): Assignment
     {
+        foreach ($experiment->variants as $variant) {
+            if ($variant->weight * self::BUCKETS < $experiment->totalWeight) {
+                throw new InvalidInput(sprintf('Each variant must hold at least 1/%d of the total weight.', self::BUCKETS));
+            }
+        }
         $bucket = $this->bucket($experiment->key, $unitId);
         $cumulativeWeight = 0;
         foreach ($experiment->variants as $variant) {

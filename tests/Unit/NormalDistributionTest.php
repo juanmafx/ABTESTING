@@ -46,6 +46,19 @@ final class NormalDistributionTest extends TestCase
         }
     }
 
+    public function testQuantileIsAccurateInUpperTail(): void
+    {
+        $this->assertNear(7.034486910047836, NormalDistribution::quantile(0.99999999999900002), 2e-9);
+        $this->assertNear(7.941444487415977, NormalDistribution::quantile(0.999999999999999), 2e-9);
+    }
+
+    public function testQuantileStaysFiniteBeyondTailCutoff(): void
+    {
+        $quantile = NormalDistribution::quantile(1e-320);
+        $this->assertTrue(is_finite($quantile), 'finite');
+        $this->assertTrue($quantile < -37.0, 'beyond cutoff');
+    }
+
     public function testQuantileRejectsBoundaries(): void
     {
         foreach ([0.0, 1.0, -0.1, 1.1, NAN] as $probability) {

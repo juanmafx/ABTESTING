@@ -13,6 +13,7 @@ final class NormalDistribution
     private const array QUANTILE_C = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00, -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
     private const array QUANTILE_D = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00, 1.0];
     private const float QUANTILE_LOW = 0.02425;
+    private const float TAIL_CUTOFF = 37.0;
     private const int CONTINUED_FRACTION_TERMS = 60;
     private const array TAIL_NUMERATOR = [3.52624965998911e-02, 0.700383064443688, 6.37396220353165, 33.912866078383, 112.079291497871, 221.213596169931, 220.206867912376];
     private const array TAIL_DENOMINATOR = [8.83883476483184e-02, 1.75566716318264, 16.064177579207, 86.7807322029461, 296.564248779674, 637.333633378831, 793.826512519948, 440.413735824752];
@@ -39,7 +40,13 @@ final class NormalDistribution
         if (!($probability > 0.0 && $probability < 1.0)) {
             throw new InvalidInput('Probability must be strictly between 0 and 1.');
         }
+        if ($probability > 0.5) {
+            return -self::quantile(1.0 - $probability);
+        }
         $estimate = self::rationalQuantile($probability);
+        if ($estimate < -self::TAIL_CUTOFF) {
+            return $estimate;
+        }
         $error = self::cdf($estimate) - $probability;
         $step = $error * sqrt(2.0 * M_PI) * exp($estimate * $estimate / 2.0);
         return $estimate - $step / (1.0 + $estimate * $step / 2.0);
@@ -47,7 +54,7 @@ final class NormalDistribution
 
     private static function tailOfMagnitude(float $magnitude): float
     {
-        if ($magnitude > 37.0) {
+        if ($magnitude > self::TAIL_CUTOFF) {
             return 0.0;
         }
         $exponential = exp(-$magnitude * $magnitude / 2.0);
@@ -66,10 +73,6 @@ final class NormalDistribution
         if ($probability < self::QUANTILE_LOW) {
             $q = sqrt(-2.0 * log($probability));
             return self::horner(self::QUANTILE_C, $q) / self::horner(self::QUANTILE_D, $q);
-        }
-        if ($probability > 1.0 - self::QUANTILE_LOW) {
-            $q = sqrt(-2.0 * log(1.0 - $probability));
-            return -self::horner(self::QUANTILE_C, $q) / self::horner(self::QUANTILE_D, $q);
         }
         $q = $probability - 0.5;
         $r = $q * $q;

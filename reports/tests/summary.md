@@ -1,13 +1,13 @@
 # Test Report
 
-- Generated: 2026-11-24T01:30:04Z
+- Generated: 2026-11-24T02:30:13Z
 - Runtime: PHP 8.5.4 on Linux
 - Command: `php tests/run.php --report-dir reports/tests`
-- Tests: 59
-- Passed: 59
+- Tests: 70
+- Passed: 70
 - Failed: 0
 - Skipped: 0
-- Assertions: 5429
+- Assertions: 5462
 
 | Suite | Test | Result |
 | --- | --- | --- |
@@ -20,6 +20,7 @@
 | ApplicationTest | testErrorsDoNotReflectRawInput | passed |
 | ApplicationTest | testRejectsDuplicateExpectedWeights | passed |
 | ApplicationTest | testNumericVariantNamesAreSupported | passed |
+| ApplicationTest | testSampleSizeOutOfRangeExitsWithUsageCode | passed |
 | ApplicationTest | testRejectsInvalidFormat | passed |
 | ChiSquareDistributionTest | testUpperTailMatchesClosedForms | passed |
 | ChiSquareDistributionTest | testZeroStatisticHasTailOne | passed |
@@ -37,6 +38,8 @@
 | ExperimentAnalyzerTest | testHolmCorrectionCanRemoveSignificance | passed |
 | ExperimentAnalyzerTest | testSampleRatioMismatchDetected | passed |
 | ExperimentAnalyzerTest | testSampleRatioHonorsExpectedWeights | passed |
+| ExperimentAnalyzerTest | testRejectsInvalidExpectedWeights | passed |
+| ExperimentAnalyzerTest | testExpectedWeightsMatchNumericLookingNames | passed |
 | ExperimentAnalyzerTest | testRejectsInvalidInput | passed |
 | HolmCorrectionTest | testAdjustsAndPreservesInputOrder | passed |
 | HolmCorrectionTest | testEnforcesMonotonicity | passed |
@@ -47,16 +50,22 @@
 | NormalDistributionTest | testExtremeTailIsZero | passed |
 | NormalDistributionTest | testQuantileMatchesReferenceValues | passed |
 | NormalDistributionTest | testQuantileInvertsCdf | passed |
+| NormalDistributionTest | testQuantileIsAccurateInUpperTail | passed |
+| NormalDistributionTest | testQuantileStaysFiniteBeyondTailCutoff | passed |
 | NormalDistributionTest | testQuantileRejectsBoundaries | passed |
 | ObservationCsvReaderTest | testReadsValidFile | passed |
 | ObservationCsvReaderTest | testAcceptsByteOrderMark | passed |
 | ObservationCsvReaderTest | testRejectsMalformedContent | passed |
 | ObservationCsvReaderTest | testRejectsTooManyRows | passed |
 | ObservationCsvReaderTest | testRejectsOversizedFile | passed |
+| ObservationCsvReaderTest | testEnforcesLimitWhenReportedSizeUnderstatesContent | passed |
 | ObservationCsvReaderTest | testRejectsDirectoriesAndMissingFiles | passed |
 | SampleSizeCalculatorTest | testMatchesReference | passed |
 | SampleSizeCalculatorTest | testSmallerEffectNeedsMoreUnits | passed |
 | SampleSizeCalculatorTest | testHigherPowerNeedsMoreUnits | passed |
+| SampleSizeCalculatorTest | testLowerPowerNeverNeedsMoreUnits | passed |
+| SampleSizeCalculatorTest | testRejectsPowerTooLowForAlpha | passed |
+| SampleSizeCalculatorTest | testRejectsResultsBeyondSupportedRange | passed |
 | SampleSizeCalculatorTest | testRejectsInvalidParameters | passed |
 | SchemaTest | testSchemaCreatesAllTables | passed |
 | SchemaTest | testSchemaIsIdempotent | passed |
@@ -69,4 +78,6 @@
 | VariantAssignerTest | testAllocationMatchesWeights | passed |
 | VariantAssignerTest | testExperimentsAreIndependent | passed |
 | VariantAssignerTest | testBucketStaysInRange | passed |
+| VariantAssignerTest | testRejectsVariantTooSmallToReceiveTraffic | passed |
+| VariantAssignerTest | testSmallestSupportedShareReceivesTraffic | passed |
 | VariantAssignerTest | testRejectsInvalidUnitIdentifiers | passed |

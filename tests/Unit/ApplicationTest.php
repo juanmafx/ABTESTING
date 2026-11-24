@@ -119,6 +119,16 @@ final class ApplicationTest extends TestCase
         $this->assertSame('2', json_decode($output, true)['comparisons'][0]['variant']);
     }
 
+    public function testSampleSizeOutOfRangeExitsWithUsageCode(): void
+    {
+        foreach ([['--mde', '1e-200'], ['--mde', '1e-10'], ['--mde', '0.02', '--power', '1e-320']] as $extra) {
+            [$code, $output, $errors] = $this->execute(['sample-size', '--baseline', '0.1', ...$extra]);
+            $this->assertSame(Application::EXIT_INVALID, $code, implode(' ', $extra));
+            $this->assertSame('', $output);
+            $this->assertTrue(str_starts_with($errors, 'Error: '));
+        }
+    }
+
     public function testRejectsInvalidFormat(): void
     {
         $path = $this->csv();
