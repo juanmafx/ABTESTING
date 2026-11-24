@@ -1,0 +1,32 @@
+{
+    "name": "juanmafx/abtesting",
+    "description": "Deterministic A/B test assignment and statistical analysis for PHP.",
+    "type": "library",
+    "license": "GPL-2.0-only",
+    "keywords": ["ab-testing", "experimentation", "statistics"],
+    "require": {
+        "php": ">=8.4"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "2.3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "AbTesting\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AbTesting\\Tests\\": "tests/"
+        }
+    },
+    "bin": ["bin/abtest"],
+    "config": {
+        "allow-plugins": false,
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "php tests/run.php",
+        "analyse": "phpstan analyse --no-progress"
+    }
+}

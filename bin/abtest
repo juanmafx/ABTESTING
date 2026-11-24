@@ -1,0 +1,10 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use AbTesting\Cli\Application;
+
+require dirname(__DIR__) . '/src/autoload.php';
+
+exit((new Application(STDOUT, STDERR))->run(array_values(array_slice($argv, 1))));
