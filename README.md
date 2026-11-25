@@ -1,4 +1,4 @@
-# ABTESTING
+# ab-testing-toolkit
 
 A dependency-free PHP 8.4+ library and command-line tool for running A/B tests: deterministic variant assignment, sample size planning, and statistically careful analysis of conversion experiments.
 
@@ -43,7 +43,7 @@ Requirements: 64-bit PHP 8.4 or newer. The tool has no third-party runtime depen
 
 ```bash
 git clone https://github.com/juanmafx/ABTESTING.git
-cd ABTESTING
+cd ab-testing-toolkit
 php bin/abtest analyze --input examples/observations.csv --control control
 ```
 
