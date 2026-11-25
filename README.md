@@ -42,7 +42,7 @@ There is no client or server application, so the repository has no `frontend/` o
 Requirements: 64-bit PHP 8.4 or newer. The tool has no third-party runtime dependencies.
 
 ```bash
-git clone https://github.com/juanmafx/ABTESTING.git
+git clone https://github.com/juanmafx/ab-testing-toolkit.git
 cd ab-testing-toolkit
 php bin/abtest analyze --input examples/observations.csv --control control
 ```
